@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cc.snser.share.viewbase"
+    android:versionCode="1"
+    android:versionName="1.1" >
+
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:targetSdkVersion="19" />
+    
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/head"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ViewPagerViewActivity" >
+        </activity>
+        <activity
+            android:name=".ViewPagerFragmentActivity" >
+        </activity>
+        <activity
+            android:name=".ViewPagerScrollControlActivity" >
+        </activity>
+        <activity
+            android:name=".ViewPagerDoubleLayerActivity" >
+        </activity>
+        <activity
+            android:name=".ListViewRawActivity" >
+        </activity>
+        <activity
+            android:name=".ListViewMenuActivity" >
+        </activity>
+        <activity
+            android:name=".ListViewMultiTypeActivity" >
+        </activity>
+        <activity
+            android:name=".ListViewPullToRefreshActivity" >
+        </activity>
+        <activity
+            android:name=".ListViewInputActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
+        </activity>
+        <activity
+            android:name=".CanvasActivity" >
+        </activity>
+        
+    </application>
+
+</manifest>

@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <TextView
+        android:id="@+id/listview_multi_type_item_txt_recv_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="250dp"
+        android:layout_gravity="left"
+        android:layout_margin="4dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="10dp"
+        android:background="@drawable/listview_multi_type_item_txt_recv_bg"
+        android:textColor="@android:color/black"
+        android:textSize="13sp"
+        android:text="接收的消息"
+        android:autoLink="web" />
+    
+</LinearLayout>

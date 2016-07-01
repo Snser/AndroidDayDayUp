@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}" >
+    
+	<Button
+        android:id="@+id/canvas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="canvas" />
+
+    <Button
+        android:id="@+id/viewpager_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="viewpager &amp; view" />
+    <Button
+        android:id="@+id/viewpager_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="viewpager &amp; fragment" />
+    <Button
+        android:id="@+id/viewpager_scroll_control"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="viewpager 滑动控制" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp" />
+    
+    <Button
+        android:id="@+id/listview_raw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="listview 纯净" />
+    <Button
+        android:id="@+id/listview_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="listview 弹出菜单" />
+    <Button
+        android:id="@+id/listview_multi_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="listview 多种item混搭" />
+    <Button
+        android:id="@+id/listview_pull_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="listview 下拉刷新、上拉加载更多" />
+    <Button
+        android:id="@+id/listview_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="listview 输入" />
+
+</LinearLayout>
