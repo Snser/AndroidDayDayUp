@@ -49,9 +49,6 @@
             android:name=".ListViewInputActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
         </activity>
-        <activity
-            android:name=".CanvasActivity" >
-        </activity>
         
     </application>
 
