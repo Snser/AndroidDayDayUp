@@ -1,7 +1,5 @@
 package cc.snser.share.viewbase;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,14 +9,13 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-public class ViewPagerViewActivity extends Activity {
+public class ViewPagerViewActivity extends Activity implements View.OnClickListener {
     
     private ViewPager mPager;
     private ImageView mImgPoint;
-    private ArrayList<Integer> mImgPointResids = new ArrayList<Integer>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +32,10 @@ public class ViewPagerViewActivity extends Activity {
     private void initView() {
         mPager = (ViewPager)findViewById(R.id.viewpager_view_pager);
         mImgPoint = (ImageView)findViewById(R.id.viewpager_view_point);
-        mImgPointResids.add(R.drawable.viewpager_view_point_1);
-        mImgPointResids.add(R.drawable.viewpager_view_point_2);
-        mImgPointResids.add(R.drawable.viewpager_view_point_3);
         mPager.setAdapter(new ViewPagerAdapter(ViewPagerViewActivity.this));
         mPager.addOnPageChangeListener(new OnViewPageChangeListener());
+        findViewById(R.id.viewpager_view_register).setOnClickListener(this);
+        findViewById(R.id.viewpager_view_login).setOnClickListener(this);
     }
     
     private class ViewPagerAdapter extends PagerAdapter {
@@ -63,30 +59,24 @@ public class ViewPagerViewActivity extends Activity {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             View page = mInflater.inflate(R.layout.viewpager_view_page, container, false);
+            TextView txtTitle = (TextView)page.findViewById(R.id.viewpager_view_page_title);
             ImageView imgContent = (ImageView)page.findViewById(R.id.viewpager_view_page_content);
-            Button btnStart = (Button)page.findViewById(R.id.viewpager_view_page_start);
-            
             switch (position) {
                 case 0:
+                    txtTitle.setText(R.string.viewpager_view_page_title_1);
                     imgContent.setImageResource(R.drawable.viewpager_view_page_content_1);
                     break;
                 case 1:
+                    txtTitle.setText(R.string.viewpager_view_page_title_2);
                     imgContent.setImageResource(R.drawable.viewpager_view_page_content_2);
                     break;
                 case 2:
+                    txtTitle.setText(R.string.viewpager_view_page_title_3);
                     imgContent.setImageResource(R.drawable.viewpager_view_page_content_3);
-                    btnStart.setVisibility(View.VISIBLE);
-                    btnStart.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ViewPagerViewActivity.this.finish();
-                        }
-                    });
                     break;
                 default:
                     break;
             }
-            
             container.addView(page);
             return page;
         }
@@ -107,15 +97,12 @@ public class ViewPagerViewActivity extends Activity {
             switch (position) {
                 case 0:
                     mImgPoint.setImageResource(R.drawable.viewpager_view_point_1);
-                    mImgPoint.setVisibility(View.VISIBLE);
                     break;
                 case 1:
                     mImgPoint.setImageResource(R.drawable.viewpager_view_point_2);
-                    mImgPoint.setVisibility(View.VISIBLE);
                     break;
                 case 2:
                     mImgPoint.setImageResource(R.drawable.viewpager_view_point_3);
-                    mImgPoint.setVisibility(View.GONE);
                     break;
                 default:
                     break;
@@ -125,5 +112,10 @@ public class ViewPagerViewActivity extends Activity {
         @Override
         public void onPageScrollStateChanged(int state) {
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        finish();
     }
 }

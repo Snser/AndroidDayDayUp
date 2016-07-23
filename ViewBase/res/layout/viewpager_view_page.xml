@@ -2,29 +2,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/viewpager_view_bg"
     tools:context="${relativePackage}.${activityClass}" >
     
-    <Button 
-        android:id="@+id/viewpager_view_page_start"
-        android:visibility="gone"
-        android:clickable="true"
-        android:layout_width="153dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="43dp"
-        android:layout_marginTop="12dp"
+    <TextView
+        android:id="@+id/viewpager_view_page_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/selector_viewpager_view_page_start" />
+        android:textSize="20sp"
+        android:textColor="#333333"
+        android:text="@string/viewpager_view_page_title_1" />
     
     <ImageView 
         android:id="@+id/viewpager_view_page_content"
         android:visibility="visible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="146dp"
-        android:layout_marginTop="70dp"
+        android:layout_height="385dp"
+        android:layout_marginTop="75dp"
         android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"
         android:src="@drawable/viewpager_view_page_content_1" />
     
 </RelativeLayout>

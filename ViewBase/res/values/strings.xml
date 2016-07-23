@@ -8,5 +8,12 @@
     <string name="viewpager_fragment_tab_home_text">主页</string>
     <string name="viewpager_fragment_tab_user_text">用户</string>
     <string name="viewpager_fragment_tab_secondlayer_text">双层</string>
-
+    
+    <string name="viewpager_view_page_title_1">发现全世界的好生活</string>
+    <string name="viewpager_view_page_title_2">和最会生活的人做朋友</string>
+    <string name="viewpager_view_page_title_3">找到全世界的好东西</string>
+    
+    <string name="viewpager_view_register">注册</string>
+    <string name="viewpager_view_login">登录</string>
+    
 </resources>
