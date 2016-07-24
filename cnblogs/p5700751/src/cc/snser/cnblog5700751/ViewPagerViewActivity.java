@@ -27,11 +27,6 @@ public class ViewPagerViewActivity extends Activity implements View.OnClickListe
         initView();
     }
     
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-    
     private void initView() {
         mPager = (ViewPager)findViewById(R.id.viewpager_view_pager);
         mImgPoint = (ImageView)findViewById(R.id.viewpager_view_point);

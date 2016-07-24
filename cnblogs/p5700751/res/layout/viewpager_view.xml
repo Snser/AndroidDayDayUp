@@ -44,6 +44,4 @@
         android:textColor="#999999"
         android:text="@string/viewpager_view_login" />
     
-
-    
 </RelativeLayout>
