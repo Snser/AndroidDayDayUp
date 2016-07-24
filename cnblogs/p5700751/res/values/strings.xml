@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ViewPagerView</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <string name="viewpager_view_page_title_1">发现全世界的好生活</string>
+    <string name="viewpager_view_page_title_2">和最会生活的人做朋友</string>
+    <string name="viewpager_view_page_title_3">找到全世界的好东西</string>
+    
+    <string name="viewpager_view_register">注册</string>
+    <string name="viewpager_view_login">登录</string>
+
+</resources>
