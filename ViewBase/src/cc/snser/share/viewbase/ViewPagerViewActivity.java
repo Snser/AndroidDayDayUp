@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ public class ViewPagerViewActivity extends Activity implements View.OnClickListe
     
     private ViewPager mPager;
     private ImageView mImgPoint;
+    
+    private SparseArray<View> mPageCache = new SparseArray<View>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,24 +61,28 @@ public class ViewPagerViewActivity extends Activity implements View.OnClickListe
         
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            View page = mInflater.inflate(R.layout.viewpager_view_page, container, false);
-            TextView txtTitle = (TextView)page.findViewById(R.id.viewpager_view_page_title);
-            ImageView imgContent = (ImageView)page.findViewById(R.id.viewpager_view_page_content);
-            switch (position) {
-                case 0:
-                    txtTitle.setText(R.string.viewpager_view_page_title_1);
-                    imgContent.setImageResource(R.drawable.viewpager_view_page_content_1);
-                    break;
-                case 1:
-                    txtTitle.setText(R.string.viewpager_view_page_title_2);
-                    imgContent.setImageResource(R.drawable.viewpager_view_page_content_2);
-                    break;
-                case 2:
-                    txtTitle.setText(R.string.viewpager_view_page_title_3);
-                    imgContent.setImageResource(R.drawable.viewpager_view_page_content_3);
-                    break;
-                default:
-                    break;
+            View page = mPageCache.get(position);
+            if (page == null) {
+                page = mInflater.inflate(R.layout.viewpager_view_page, container, false);
+                TextView txtTitle = (TextView)page.findViewById(R.id.viewpager_view_page_title);
+                ImageView imgContent = (ImageView)page.findViewById(R.id.viewpager_view_page_content);
+                switch (position) {
+                    case 0:
+                        txtTitle.setText(R.string.viewpager_view_page_title_1);
+                        imgContent.setImageResource(R.drawable.viewpager_view_page_content_1);
+                        break;
+                    case 1:
+                        txtTitle.setText(R.string.viewpager_view_page_title_2);
+                        imgContent.setImageResource(R.drawable.viewpager_view_page_content_2);
+                        break;
+                    case 2:
+                        txtTitle.setText(R.string.viewpager_view_page_title_3);
+                        imgContent.setImageResource(R.drawable.viewpager_view_page_content_3);
+                        break;
+                    default:
+                        break;
+                }
+                mPageCache.append(position, page);
             }
             container.addView(page);
             return page;
