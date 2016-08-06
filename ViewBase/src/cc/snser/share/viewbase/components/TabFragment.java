@@ -19,7 +19,7 @@ public class TabFragment extends Fragment {
     private OnTabClickInternalListener mTabClickInternalListener = new OnTabClickInternalListener();
     private OnTabClickListenser mOnTabClickListenser;
     
-    private int mDefaultTab = -1;
+    private int mDefaultTab = 0;
     private int mCurrentTab = -1;
     
     @Override
@@ -52,9 +52,11 @@ public class TabFragment extends Fragment {
         public void onClick(View v) {
             if (v != null && v.getTag() instanceof Integer) {
                 final int tab = (Integer)v.getTag();
-                setCurrentTab(tab);
-                if (mOnTabClickListenser != null) {
-                    mOnTabClickListenser.onTabClick(tab);
+                if (tab != mCurrentTab) {
+                    setCurrentTab(tab);
+                    if (mOnTabClickListenser != null) {
+                        mOnTabClickListenser.onTabClick(tab);
+                    }
                 }
             }
         }
@@ -65,7 +67,7 @@ public class TabFragment extends Fragment {
     }
     
     public void setCurrentTab(int tab) {
-        if (mTxtTabApp != null && mTxtTabHome != null && mTxtTabUser != null && mCurrentTab != tab) {
+        if (mTxtTabApp != null && mTxtTabHome != null && mTxtTabUser != null) {
             mCurrentTab = tab;
             mTxtTabApp.setTextColor(getResources().getColor(R.color.viewpager_fragment_tab_normal));
             mTxtTabHome.setTextColor(getResources().getColor(R.color.viewpager_fragment_tab_normal));

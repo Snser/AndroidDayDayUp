@@ -35,7 +35,7 @@ public class ClickFragment extends PagerFragment {
         private static final long TIMEOUT_CLICK = 500;
         private static final int MSG_TIMEOUT_CLICK = 0x1001;
         
-        private static Handler mHandler = new Handler() {
+        private static Handler sHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 if (msg.what == MSG_TIMEOUT_CLICK && msg.obj instanceof Button) {
@@ -54,8 +54,8 @@ public class ClickFragment extends PagerFragment {
                     Log.d("Snser", "MultiClickListener 连续点击 mCount=" + (mCount + 1));
                     ++mCount;
                     mLastClickTime = time;
-                    mHandler.removeMessages(MSG_TIMEOUT_CLICK);
-                    mHandler.sendMessageDelayed(Message.obtain(mHandler, MSG_TIMEOUT_CLICK, v), TIMEOUT_CLICK);
+                    sHandler.removeMessages(MSG_TIMEOUT_CLICK);
+                    sHandler.sendMessageDelayed(Message.obtain(sHandler, MSG_TIMEOUT_CLICK, v), TIMEOUT_CLICK);
                     if (mCount < MAX_CLICK_COUNT) {
                         ((Button)v).setText("点我   +" + mCount);
                     } else {

@@ -49,7 +49,7 @@ public class ViewPagerFragmentActivity extends FragmentActivity {
     
     private ViewPagerAdapter mAdapter;
     
-    private static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_PAGE = 1; //默认页面
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,23 +69,19 @@ public class ViewPagerFragmentActivity extends FragmentActivity {
         mPager = (ViewPager)findViewById(R.id.viewpager_fragment_pager);
         mPager.setAdapter(mAdapter = new ViewPagerAdapter(mManager));
         mPager.addOnPageChangeListener(new ViewPageChangeListener());
-        mPager.setCurrentItem(DEFAULT_PAGE);
-        //如果DEFAULT_PAGE为0，页面初始化时不会触发onPageSelected，需额外调用一次notifyPageChangeToFragments
-        if (mPager.getCurrentItem() == DEFAULT_PAGE) {
-            notifyPageChangeToFragments(DEFAULT_PAGE);
-        }
+        setCurrentItem(DEFAULT_PAGE);
     }
     
     @Override
     protected void onResume() {
-        super.onResume();
         Log.d("Snser", "ViewPagerFragmentActivity onResume");
+        super.onResume();
     }
     
     private class ViewPageChangeListener implements OnPageChangeListener {
         @Override
         public void onPageSelected(int position) {
-            setCurrentItem(position, false);
+            setCurrentItem(position);
         }
         
         @Override
@@ -121,17 +117,16 @@ public class ViewPagerFragmentActivity extends FragmentActivity {
     private class ViewPageTabClickListenser implements OnTabClickListenser {
         @Override
         public void onTabClick(int tab) {
-            setCurrentItem(tab, true);
+            setCurrentItem(tab);
         }
     }
        
-    private void setCurrentItem(int item, boolean isFromClickTab) {
-        //来源于手动点击tab的调用，不用通知Fragment了，后续onPageSelected会去通知
-        if (!isFromClickTab) {
+    private void setCurrentItem(int item) {
+        if (item == mPager.getCurrentItem()) {
+            //此时是源于initView或onPageSelected的调用
             notifyPageChangeToFragments(item);
-        }
-        //来源于onPageSelected的调用，不用再setCurrentItem了
-        if (item != mPager.getCurrentItem()) {
+        } else {
+            //此时是源于initView或onTabClick的调用，后续会自动触发一次onPageSelected
             mPager.setCurrentItem(item);
         }
     }

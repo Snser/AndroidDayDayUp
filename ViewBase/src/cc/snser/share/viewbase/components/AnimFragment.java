@@ -21,7 +21,7 @@ public class AnimFragment extends PagerFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d("Snser", "AnimFragment onCreateView");
         mViewRoot = inflater.inflate(R.layout.viewpager_fragment_anim, container, false);
-        mAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_test);
+        mAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.anim_fade_in);
         mAnim.setInterpolator(new LinearInterpolator());
         initView(mViewRoot);
         return mViewRoot;
@@ -30,6 +30,12 @@ public class AnimFragment extends PagerFragment {
     private void initView(View root) {
         mImg = (ImageView)root.findViewById(R.id.viewpager_fragment_anim_img);
         startAnim();
+    }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopAnim();
     }
     
     @Override
