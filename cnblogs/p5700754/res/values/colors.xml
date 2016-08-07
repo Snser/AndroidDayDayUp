@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="background_default">#EEEEEE</color>
+    <color name="viewpager_fragment_tab_normal">#AAAAAA</color>
+    <color name="viewpager_fragment_tab_current">#A0FF0000</color>
+    <color name="viewpager_fragment_click_btn_normal">#A08080FF</color>
+    <color name="viewpager_fragment_click_btn_pressed">#FF8080FF</color>
+    
+</resources>

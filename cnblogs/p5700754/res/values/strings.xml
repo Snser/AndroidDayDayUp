@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ViewPagerFragment</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <string name="viewpager_fragment_tab_app_text">应用</string>
+    <string name="viewpager_fragment_tab_home_text">主页</string>
+    <string name="viewpager_fragment_tab_user_text">用户</string>
+    <string name="viewpager_fragment_tab_secondlayer_text">双层</string>
+
+</resources>
