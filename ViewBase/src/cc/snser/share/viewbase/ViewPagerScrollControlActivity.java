@@ -25,26 +25,13 @@ public class ViewPagerScrollControlActivity extends FragmentActivity {
     private Button mBtnAutoScroll;
     private ScrollControlViewPager mPager;
     
+    private static final boolean POLICY_FRAGMENT = false;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.viewpager_scroll_control);
         initView();
-    }
-    
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
     
     private void initView() {
@@ -65,17 +52,20 @@ public class ViewPagerScrollControlActivity extends FragmentActivity {
             }
         });
         mPager = (ScrollControlViewPager)findViewById(R.id.viewpager_scroll_control_pager);
-        mPager.setAdapter(new ViewPagerAdapter(this), true); //这是view adapter的例子
-        //mPager.setAdapter(new FragmentViewPagerAdapter(getSupportFragmentManager()), true); //这是fragment adapter的例子
+        if (POLICY_FRAGMENT) {
+            mPager.setAdapter(new ViewPagerFragmentAdapter(getSupportFragmentManager()), true); //这是fragment adapter的例子
+        } else {
+            mPager.setAdapter(new ViewPagerViewAdapter(this), true); //这是view adapter的例子
+        }
         mPager.setCurrentItem(1);
     }
     
-    private class ViewPagerAdapter extends PagerAdapter {
+    private class ViewPagerViewAdapter extends PagerAdapter {
         private final int mCount = 3;
         private ArrayList<View> mViews = new ArrayList<View>();
         private LayoutInflater mInflater;
         
-        public ViewPagerAdapter(Context context) {
+        public ViewPagerViewAdapter(Context context) {
             mInflater = LayoutInflater.from(context);
         }
         
@@ -118,11 +108,11 @@ public class ViewPagerScrollControlActivity extends FragmentActivity {
         }
     }
     
-    private class FragmentViewPagerAdapter extends FragmentPagerAdapter implements IFragmentPagerAdapter {
+    private class ViewPagerFragmentAdapter extends FragmentPagerAdapter implements IFragmentPagerAdapter {
         private final FragmentManager mManager;
         private final int sCount = 3;
 
-        public FragmentViewPagerAdapter(FragmentManager fm) {
+        public ViewPagerFragmentAdapter(FragmentManager fm) {
             super(fm);
             mManager = fm;
         }

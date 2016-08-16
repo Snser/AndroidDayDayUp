@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">ViewPagerScrollControl</string>
+
+    <string name="viewpager_view_page_title_1">发现全世界的好生活</string>
+    <string name="viewpager_view_page_title_2">和最会生活的人做朋友</string>
+    <string name="viewpager_view_page_title_3">找到全世界的好东西</string>
+    
+</resources>
