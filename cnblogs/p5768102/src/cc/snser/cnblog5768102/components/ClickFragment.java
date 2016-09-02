@@ -31,7 +31,7 @@ public class ClickFragment extends PagerFragment {
         private int mCount = 0;
         private long mLastClickTime = 0;
         
-        private static final long MAX_CLICK_COUNT = 4;
+        private static final long MAX_CLICK_COUNT = Integer.MAX_VALUE;//4;
         private static final long TIMEOUT_CLICK = 500;
         private static final int MSG_TIMEOUT_CLICK = 0x1001;
         

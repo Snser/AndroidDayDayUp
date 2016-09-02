@@ -2,6 +2,7 @@ package cc.snser.cnblog5768102;
 
 import java.util.ArrayList;
 
+import cc.snser.cnblog5768102.ScrollControlViewPager.IFragmentPagerAdapter;
 import cc.snser.cnblog5768102.components.AnimFragment;
 import cc.snser.cnblog5768102.components.ClickFragment;
 import cc.snser.cnblog5768102.components.DateFragment;
@@ -14,23 +15,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
-public class ViewPagerScrollControlActivity extends FragmentActivity implements View.OnClickListener {
+public class ViewPagerScrollControlActivity extends FragmentActivity implements OnCheckedChangeListener {
     
-    private static final boolean FLAG_USE_FRAGMENT_ADAPTER = true;
+    private static final boolean FLAG_USE_FRAGMENT_ADAPTER = false;
     private static final int DEFAULT_PAGE = 1; //默认页面
     
     private ImageView mImgIndicator;
     private ScrollControlViewPager mPager;
-    private Button mBtnScrollSwitch;
-    private Button mBtnAutoScroll;
+    private ToggleButton mBtnScrollSwitch;
+    private ToggleButton mBtnLoopScroll;
+    private ToggleButton mBtnAutoScroll;
     
     private PagerAdapter mAdapter;
     
@@ -55,7 +60,7 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
         mImgIndicator = (ImageView)findViewById(R.id.viewpager_scroll_control_indicator);
         
         mPager = (ScrollControlViewPager)findViewById(R.id.viewpager_scroll_control_pager);
-        mPager.setOnPageChangeListener(new ViewPageChangeListener());
+        mPager.addOnPageChangeListener(new ViewPageChangeListener());
         if (FLAG_USE_FRAGMENT_ADAPTER) {
             mPager.setAdapter(mAdapter = new ViewPagerFragmentAdapter(getSupportFragmentManager())); //这是fragment adapter的例子
         } else {
@@ -64,10 +69,12 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
         }
         setCurrentItem(DEFAULT_PAGE);
         
-        mBtnScrollSwitch = (Button)findViewById(R.id.viewpager_scroll_control_action_switch);
-        mBtnScrollSwitch.setOnClickListener(this);
-        mBtnAutoScroll = (Button)findViewById(R.id.viewpager_scroll_control_action_auto);
-        mBtnAutoScroll.setOnClickListener(this);
+        mBtnScrollSwitch = (ToggleButton)findViewById(R.id.viewpager_scroll_control_action_switch);
+        mBtnScrollSwitch.setOnCheckedChangeListener(this);
+        mBtnLoopScroll = (ToggleButton)findViewById(R.id.viewpager_scroll_control_action_loop);
+        mBtnLoopScroll.setOnCheckedChangeListener(this);
+        mBtnAutoScroll = (ToggleButton)findViewById(R.id.viewpager_scroll_control_action_auto);
+        mBtnAutoScroll.setOnCheckedChangeListener(this);
     }
     
     private class ViewPageChangeListener implements OnPageChangeListener {
@@ -86,6 +93,7 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
     }
     
     private void setCurrentItem(int item) {
+        Log.d("Snser", "Activity setCurrentItem item=" + item + " getCurrentItem=" + mPager.getCurrentItem());
         if (item == mPager.getCurrentItem()) {
             //此时是源于initView或onPageSelected的调用
             notifyPageChangeToFragments(item);
@@ -178,11 +186,13 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
         }
     }
     
-    private class ViewPagerFragmentAdapter extends FragmentPagerAdapter {
+    private class ViewPagerFragmentAdapter extends FragmentPagerAdapter implements IFragmentPagerAdapter {
+        private final FragmentManager mFragmentManager;
         private ArrayList<PagerFragment> mFragments = new ArrayList<PagerFragment>();
         
         public ViewPagerFragmentAdapter(FragmentManager fm) {
             super(fm);
+            mFragmentManager = fm;
             mFragments.add(new ClickFragment());
             mFragments.add(new DateFragment());
             mFragments.add(new AnimFragment());
@@ -197,30 +207,26 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
         public int getCount() {
             return mFragments.size();
         }
-    }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.viewpager_scroll_control_action_switch:
-                onScrollSwitchClicked();
-                break;
-            case R.id.viewpager_scroll_control_action_auto:
-                onAutoScrollClicked();
-                break;
-            default:
-                break;
+        @Override
+        public FragmentManager getFragmentManager() {
+            return mFragmentManager;
         }
     }
     
-    private void onScrollSwitchClicked() {
-        mPager.setScrollEnabled(!mPager.getScrollEnabled());
-        mBtnScrollSwitch.setText(mPager.getScrollEnabled() ? "禁止滑动" : "允许滑动");
-    }
-    
-    private void onAutoScrollClicked() {
-        mPager.setAutoScrollEnabled(!mPager.getAutoScrollEnabled());
-        mBtnAutoScroll.setText(mPager.getAutoScrollEnabled() ? "禁止自动滑动" : "开启自动滑动");
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView == mBtnScrollSwitch) {
+            mPager.setScrollEnabled(isChecked);
+        } else if (buttonView == mBtnLoopScroll) {
+            mPager.setLoopScrollEnabled(isChecked);
+            Log.d("Snser", "instantiateItem test getChildCount=" + mPager.getChildCount());
+            for (int c = 0; c != mPager.getChildCount(); ++c) {
+                Log.d("Snser", "instantiateItem test getChild" + c + "=" + mPager.getChildAt(c).hashCode());
+            }
+        } else if (buttonView == mBtnAutoScroll) {
+            mPager.setAutoScrollEnabled(isChecked);
+        }
     }
     
 }

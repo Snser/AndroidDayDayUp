@@ -13,22 +13,30 @@
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
         android:background="@android:color/white" >
-        <Button
+        <ToggleButton
             android:id="@+id/viewpager_scroll_control_action_switch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:text="禁止滑动" />
-        <Button
+            android:textOn="滑动ON"
+            android:textOff="滑动OFF"
+            android:checked="true" />
+        <ToggleButton
+            android:id="@+id/viewpager_scroll_control_action_loop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textOn="循环滑动ON"
+            android:textOff="循环滑动OFF"
+            android:checked="false" />
+        <ToggleButton
             android:id="@+id/viewpager_scroll_control_action_auto"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:text="开启自动滑动" />
+            android:textOn="自动滑动ON"
+            android:textOff="自动滑动OFF"
+            android:checked="false" />
     </LinearLayout>
     
     <cc.snser.cnblog5768102.ScrollControlViewPager
