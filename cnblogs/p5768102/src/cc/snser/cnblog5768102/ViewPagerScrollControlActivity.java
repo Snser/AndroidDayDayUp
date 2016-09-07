@@ -2,7 +2,7 @@ package cc.snser.cnblog5768102;
 
 import java.util.ArrayList;
 
-import cc.snser.cnblog5768102.ScrollControlViewPager.IFragmentPagerAdapter;
+import cc.snser.cnblog5768102.LoopScrollViewPager.IFragmentPagerAdapter;
 import cc.snser.cnblog5768102.components.AnimFragment;
 import cc.snser.cnblog5768102.components.ClickFragment;
 import cc.snser.cnblog5768102.components.DateFragment;
@@ -93,8 +93,8 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
     }
     
     private void setCurrentItem(int item) {
-        Log.d("Snser", "Activity setCurrentItem item=" + item + " getCurrentItem=" + mPager.getCurrentItem());
-        if (item == mPager.getCurrentItem()) {
+        Log.d("Snser", "Activity setCurrentItem item=" + item + " getCurrentItem=" + mPager.getCurrentItemOriginal());
+        if (item == mPager.getCurrentItemOriginal()) {
             //此时是源于initView或onPageSelected的调用
             notifyPageChangeToFragments(item);
             switch (item) {
@@ -112,7 +112,7 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
             }
         } else {
             //此时是源于initView的调用，后续会自动触发一次onPageSelected
-            mPager.setCurrentItem(item);
+            mPager.setCurrentItemOriginal(item);
         }
     }
     
