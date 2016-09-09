@@ -80,6 +80,7 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
     private class ViewPageChangeListener implements OnPageChangeListener {
         @Override
         public void onPageSelected(int position) {
+            Log.d("Snser", "Activity onPageSelected position=" + position);
             setCurrentItem(position);
         }
         
@@ -93,7 +94,7 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
     }
     
     private void setCurrentItem(int item) {
-        Log.d("Snser", "Activity setCurrentItem item=" + item + " getCurrentItem=" + mPager.getCurrentItemOriginal());
+        Log.d("Snser", "Activity setCurrentItem item=" + item + " getCurrentItemOriginal=" + mPager.getCurrentItemOriginal());
         if (item == mPager.getCurrentItemOriginal()) {
             //此时是源于initView或onPageSelected的调用
             notifyPageChangeToFragments(item);
