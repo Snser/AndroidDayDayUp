@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 public class LoopScrollViewPager extends ViewPager {
-    private boolean mIsLoopScrollEnabled = false;
+    private boolean mIsLoopScrollEnabled = true;//false;
     
     /**
      * 为实现循环滑动的内部Adapter，对{@link #setAdapter(PagerAdapter)}传入的<b>originalAdapter</b>做了一层封装
@@ -29,8 +29,8 @@ public class LoopScrollViewPager extends ViewPager {
     private OnPageChangeListener mOnPageChangeListener;
     private ArrayList<OnPageChangeListener> mOnPageChangeListeners;
     
-    final ImageView mViewPrefix = new ImageView(getContext());
-    final ImageView mViewPostfix = new ImageView(getContext());
+    private Object mPagePrefix;
+    private Object mPagePostfix;
     
     public LoopScrollViewPager(Context context) {
         super(context);
@@ -51,7 +51,7 @@ public class LoopScrollViewPager extends ViewPager {
     }
     
     public void setLoopScrollEnabled(boolean isEnabled) {
-        mIsLoopScrollEnabled = isEnabled;
+        //mIsLoopScrollEnabled = isEnabled;
     }
     
 
@@ -62,7 +62,7 @@ public class LoopScrollViewPager extends ViewPager {
      */
     private int toOriginalPosition(int internalPosition) {
         final int originalPosition;
-        if (getLoopScrollEnabled() && mInternalOnPageChangeListener.isPageManualSelected()) {
+        if (mIsLoopScrollEnabled/* && mInternalOnPageChangeListener.isPageManualSelected()*/) {
             final int originalCount = mInternalAdapter.getCount() - 2;
             originalPosition = (internalPosition - 1 + originalCount) % originalCount;
         } else {
@@ -79,7 +79,7 @@ public class LoopScrollViewPager extends ViewPager {
      */
     private int toInternalPosition(int originalPosition) {
         final int internalPosition;
-        if (getLoopScrollEnabled()) {
+        if (mIsLoopScrollEnabled) {
             internalPosition = originalPosition + 1;
         } else {
             internalPosition = originalPosition;
@@ -93,24 +93,38 @@ public class LoopScrollViewPager extends ViewPager {
      */
     @Override
     public void setAdapter(PagerAdapter originalAdapter) {
-        if (originalAdapter instanceof FragmentPagerAdapter) {
+        if (mIsLoopScrollEnabled) {
+            if (originalAdapter instanceof LoopScrollViewPagerAdapter) {
+                super.setAdapter(mInternalAdapter = new InternalViewPagerAdapter(originalAdapter));
+            } else if (originalAdapter instanceof LoopScrollFragmentPagerApapter) {
+                //super.setAdapter(mInternalAdapter = new InternalFragmentAdapter(fm, originalAdapter));
+            } else {
+                throw new IllegalArgumentException("originalAdapter must be instance of" 
+                        + " LoopScrollViewPagerAdapter/LoopScrollFragmentPagerApapter when LoopScroll is enabled!");
+            }
+        } else {
+            
+        }
+
+        
+/*        if (originalAdapter instanceof FragmentPagerAdapter) {
             if (originalAdapter instanceof IFragmentPagerAdapter) {
                 final FragmentManager fm = ((IFragmentPagerAdapter)originalAdapter).getFragmentManager();
                 super.setAdapter(mInternalAdapter = new InternalFragmentAdapter(fm, (FragmentPagerAdapter)originalAdapter));
             }
         } else {
             super.setAdapter(mInternalAdapter = new InternalViewAdapter(originalAdapter));
-        }
+        }*/
+        
     }
     
-    private class InternalViewAdapter extends PagerAdapter implements IInternalAdapter {
+    private class InternalViewPagerAdapter extends PagerAdapter implements IInternalAdapter {
         private PagerAdapter mOriginalAdapter;
         
-        public InternalViewAdapter(PagerAdapter originalAdapter) {
+        public InternalViewPagerAdapter(PagerAdapter originalAdapter) {
             mOriginalAdapter = originalAdapter;
             
-            
-            View page = (View) mOriginalAdapter.instantiateItem(LoopScrollViewPager.this, 0);
+            //View page = (View) mOriginalAdapter.instantiateItem(LoopScrollViewPager.this, 0);
             
         }
         
@@ -122,7 +136,7 @@ public class LoopScrollViewPager extends ViewPager {
         @Override
         public int getCount() {
             if (mOriginalAdapter != null) {
-                if (getLoopScrollEnabled()) {
+                if (mIsLoopScrollEnabled) {
                     return mOriginalAdapter.getCount() + 2;
                 } else {
                     return mOriginalAdapter.getCount();
@@ -143,24 +157,20 @@ public class LoopScrollViewPager extends ViewPager {
                 final int originalPosition = toOriginalPosition(position);
                 final int count = getCount();
                 final Object item;
-                if (getLoopScrollEnabled() && (position == 0 || position == count - 1)) {
-                    mViewPrefix.setBackgroundColor(0xffff0000);
-                    mViewPostfix.setBackgroundColor(0xff00ff00);
-                    item = position == 0 ? mViewPrefix : mViewPostfix;
+                if (mIsLoopScrollEnabled && (position == 0 || position == count - 1)) {
+                    if (position == 0 && mPagePrefix == null) {
+                        mPagePrefix = ((LoopScrollViewPagerAdapter)mOriginalAdapter).instantiateNewItem(container, originalPosition);
+                    } else if (position == count - 1 && mPagePostfix == null) {
+                        mPagePostfix = ((LoopScrollViewPagerAdapter)mOriginalAdapter).instantiateNewItem(container, originalPosition);
+                    }
+                    item = position == 0 ? mPagePrefix : mPagePostfix;
                 } else {
                     item = mOriginalAdapter.instantiateItem(container, originalPosition);
                 }
                 Log.i("Snser", "instantiateItem originalPos=" + originalPosition + " internalPos=" + position + " internalCurItem=" + getCurrentItemInternal() + " item=" + item.hashCode());
-                if (getLoopScrollEnabled() && item instanceof View) {
+                if (mIsLoopScrollEnabled && item instanceof View) {
                     addViewInternal((View)item);
                 }
-                
-/*                item = mOriginalAdapter.instantiateItem(container, originalPosition);
-                Log.i("Snser", "instantiateItem originalPos=" + originalPosition + " internalPos=" + position + " internalCurItem=" + getCurrentItemInternal() + " item=" + item.hashCode());
-                if (getLoopScrollEnabled() && item instanceof View && indexOfChild((View)item) == -1) {
-                    addViewInternal((View)item);
-                }*/
-                
                 return item;
             } else {
                 return null;
@@ -170,19 +180,12 @@ public class LoopScrollViewPager extends ViewPager {
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             if (mOriginalAdapter != null) {
-                boolean destory = true;
-                if (getLoopScrollEnabled()) {
-                    final int originalCurrentPosition = getCurrentItemOriginal();
-                    final int originalDestoryPosition = toOriginalPosition(position);
-                    final int originalCount = getOriginalAdapter().getCount();
-                    final int internalCount = getCount();
-                    //destory = position != 0 && position != internalCount - 1;
-                    destory = ((originalCurrentPosition - originalDestoryPosition + originalCount) % originalCount) > 1;
-                }
-                Log.i("Snser", "destroyItem originalPos=" + toOriginalPosition(position) + " internalPos=" + position + " internalCurItem=" + getCurrentItemInternal() + " item=" + object.hashCode() + " d=" + destory);
-                //if (destory) {
+                Log.w("Snser", "destroyItem originalPos=" + toOriginalPosition(position) + " internalPos=" + position + " internalCurItem=" + getCurrentItemInternal() + " item=" + object.hashCode());
+                if (mIsLoopScrollEnabled) {
                     container.removeView((View)object);
-                //}
+                } else {
+                    mOriginalAdapter.destroyItem(container, position, object);
+                }
             }
         }
     }
@@ -211,15 +214,15 @@ public class LoopScrollViewPager extends ViewPager {
         }
     }
     
-    public abstract class LoopScrollViewPagerAdapter extends PagerAdapter {
-        public abstract Object instantiateItemNewInstance(ViewGroup container, int position);
+    public abstract static class LoopScrollViewPagerAdapter extends PagerAdapter {
+        public abstract Object instantiateNewItem(ViewGroup container, int position);
     }
     
-    public abstract class LoopScrollFragmentApapter extends FragmentPagerAdapter {
-        public LoopScrollFragmentApapter(FragmentManager fm) {
+    public abstract static class LoopScrollFragmentPagerApapter extends FragmentPagerAdapter {
+        public LoopScrollFragmentPagerApapter(FragmentManager fm) {
             super(fm);
         }
-        public abstract Fragment getItemNewInstance(int position);
+        public abstract Fragment getNewItem(int position);
     }
     
     public interface IFragmentPagerAdapter {
@@ -233,7 +236,7 @@ public class LoopScrollViewPager extends ViewPager {
     /* override addView begin */
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        if (!getLoopScrollEnabled()) {
+        if (!mIsLoopScrollEnabled) {
             super.addView(child, index, params);
         }
     }
@@ -368,11 +371,14 @@ public class LoopScrollViewPager extends ViewPager {
         }
 
         @Override
-        public void onPageSelected(int position) {
-            setPageManualSelected(true);
-            final int originalPosition = toOriginalPosition(position);
+        public void onPageSelected(int internalPosition) {
+            //setPageManualSelected(true);
+            final int originalPosition = toOriginalPosition(internalPosition);
             final int count = mInternalAdapter.getCount();
-            Log.d("Snser", "onPageSelected position=" + position + " originalPos=" + originalPosition);
+            Log.d("Snser", "onPageSelected Item position=" + internalPosition + " originalPos=" + originalPosition);
+            
+            Log.w("Snser", "onPageSelected getScrollX=" + getScrollX() + " page=" + getCurrentItemInternal());
+            
             //if (!(getLoopScrollEnabled() && (position == 0 || position == count - 1))) {
                 if (mOnPageChangeListener != null) {
                     mOnPageChangeListener.onPageSelected(originalPosition);
@@ -386,25 +392,29 @@ public class LoopScrollViewPager extends ViewPager {
                 }
             //}
                 
-/*            if (position != 0 && position != count - 1) {
-                if (originalPosition == 0) {
-                    final View page = getChildAt(position);
-                    Bitmap cache = page.getDrawingCache();
-                    if (cache != null) {
-                        mViewPostfix.setImageBitmap(cache);
-                    }
+/*            if (mIsLoopScrollEnabled) {
+                if (internalPosition == 0 || internalPosition == count - 1) {
+                    setCurrentItemInternal(toInternalPosition(toOriginalPosition(internalPosition)), false);
                 }
-                
             }*/
+                
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
             mScrollState = state;
-            if (getLoopScrollEnabled() && mScrollState == ViewPager.SCROLL_STATE_IDLE) {
+            
+            if (getScrollX() % getWidth() == 0) {
+                Log.i("Snser", "onPageScrollStateChanged state=" + state + " getScrollX=" + getScrollX() + " page=" + getCurrentItemInternal());
+            } else {
+                Log.d("Snser", "onPageScrollStateChanged state=" + state + " getScrollX=" + getScrollX() + " page=" + getCurrentItemInternal());
+            }
+            
+            if (mIsLoopScrollEnabled && mScrollState == ViewPager.SCROLL_STATE_IDLE) {
                 final int internalPosition = getCurrentItemInternal();
                 final int count = mInternalAdapter.getCount();
                 if (internalPosition == 0 || internalPosition == count - 1) {
+                    Log.e("Snser", "onPageScrollStateChanged getScrollX= setCurrentItemInternal.... ");
                     setCurrentItemInternal(toInternalPosition(toOriginalPosition(internalPosition)), false);
                 }
             }

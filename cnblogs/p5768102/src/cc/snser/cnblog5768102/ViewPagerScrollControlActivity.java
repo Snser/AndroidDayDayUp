@@ -3,6 +3,7 @@ package cc.snser.cnblog5768102;
 import java.util.ArrayList;
 
 import cc.snser.cnblog5768102.LoopScrollViewPager.IFragmentPagerAdapter;
+import cc.snser.cnblog5768102.LoopScrollViewPager.LoopScrollViewPagerAdapter;
 import cc.snser.cnblog5768102.components.AnimFragment;
 import cc.snser.cnblog5768102.components.ClickFragment;
 import cc.snser.cnblog5768102.components.DateFragment;
@@ -133,7 +134,7 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
         }
     }
     
-    private class ViewPagerViewAdapter extends PagerAdapter {
+    private class ViewPagerViewAdapter extends LoopScrollViewPagerAdapter {
         private final int mCount = 3;
         private LayoutInflater mInflater;
         private SparseArray<View> mPageCache = new SparseArray<View>();
@@ -156,28 +157,34 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
         public Object instantiateItem(ViewGroup container, int position) {
             View page = mPageCache.get(position);
             if (page == null) {
-                page = mInflater.inflate(R.layout.viewpager_view_page, container, false);
-                TextView txtTitle = (TextView)page.findViewById(R.id.viewpager_view_page_title);
-                ImageView imgContent = (ImageView)page.findViewById(R.id.viewpager_view_page_content);
-                switch (position) {
-                    case 0:
-                        txtTitle.setText(R.string.viewpager_view_page_title_1);
-                        imgContent.setImageResource(R.drawable.viewpager_view_page_content_1);
-                        break;
-                    case 1:
-                        txtTitle.setText(R.string.viewpager_view_page_title_2);
-                        imgContent.setImageResource(R.drawable.viewpager_view_page_content_2);
-                        break;
-                    case 2:
-                        txtTitle.setText(R.string.viewpager_view_page_title_3);
-                        imgContent.setImageResource(R.drawable.viewpager_view_page_content_3);
-                        break;
-                    default:
-                        break;
-                }
+                page = (View)instantiateNewItem(container, position);
                 mPageCache.append(position, page);
             }
             container.addView(page);
+            return page;
+        }
+        
+        @Override
+        public Object instantiateNewItem(ViewGroup container, int position) {
+            final View page = mInflater.inflate(R.layout.viewpager_view_page, container, false);
+            final TextView txtTitle = (TextView)page.findViewById(R.id.viewpager_view_page_title);
+            final ImageView imgContent = (ImageView)page.findViewById(R.id.viewpager_view_page_content);
+            switch (position) {
+                case 0:
+                    txtTitle.setText(R.string.viewpager_view_page_title_1);
+                    imgContent.setImageResource(R.drawable.viewpager_view_page_content_1);
+                    break;
+                case 1:
+                    txtTitle.setText(R.string.viewpager_view_page_title_2);
+                    imgContent.setImageResource(R.drawable.viewpager_view_page_content_2);
+                    break;
+                case 2:
+                    txtTitle.setText(R.string.viewpager_view_page_title_3);
+                    imgContent.setImageResource(R.drawable.viewpager_view_page_content_3);
+                    break;
+                default:
+                    break;
+            }
             return page;
         }
         
@@ -221,10 +228,10 @@ public class ViewPagerScrollControlActivity extends FragmentActivity implements 
             mPager.setScrollEnabled(isChecked);
         } else if (buttonView == mBtnLoopScroll) {
             mPager.setLoopScrollEnabled(isChecked);
-            Log.d("Snser", "instantiateItem test getChildCount=" + mPager.getChildCount());
+/*            Log.d("Snser", "instantiateItem test getChildCount=" + mPager.getChildCount());
             for (int c = 0; c != mPager.getChildCount(); ++c) {
                 Log.d("Snser", "instantiateItem test getChild" + c + "=" + mPager.getChildAt(c).hashCode());
-            }
+            }*/
         } else if (buttonView == mBtnAutoScroll) {
             mPager.setAutoScrollEnabled(isChecked);
         }
